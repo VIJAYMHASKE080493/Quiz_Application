@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="quize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <section id="signup-container">
+        <div id="sign-pages">
+            <div class="Character-2">
+                <img src="images/mind img.png" alt="images">
+            </div>
+            <div id="form-1">
+                <form onsubmit="return data()"action="quize.html">
+                    <h2 class="s-tag">Singup</h2>
+                    <h5>Sing up Join</h5>
+                    <form action="">
+                    <div class="inpute-box">
+                        <p>Full Name<span>*</span></p>
+                        <input id="username" type="text" placeholder="Full Name">
+                    </div>
+                    <div class="inpute-box">
+                        <p>EmailID<span>*</span></p>
+                        <input id="EmailID" type="text" placeholder="xyz@gmail.com">
+                    </div>
+                    <div class="inpute-box">
+                        <p>Password<span>*</span></p>
+                        <input id="Password" type="text" placeholder="Password">
+                        <i class="fa-regular fa-eye-slash" onclick="toggle()"></i>
+                    </div>
+                        <button id="click-on" type="submit">Login</button>
+                    </form>
+                    <div class="sign-page2">
+                        <img src="images/G-logo.jpeg" alt="">
+                        <p>Sign up with Google</p>
+                    </div>
+                    <div class="sign-up-link2">
+                        <p class="box-1"><input type="checkbox">I accept Term & conditions</p>
+                        <P class="end-note">Have an account?<a href="quize.html">Log In?</a></P>
+                    </div>
+                </form>
+            
+            </div>
+        </div>
+        </section>
+        <script src="quize.js"></script>
+</body>
+</html>
