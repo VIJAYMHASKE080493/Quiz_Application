@@ -1,63 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Start Question</title>
-    <link rel="stylesheet" href="quize.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link rel="stylesheet" href="quize.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <div id="navbar">
-        <img src="images/tech-log.jpeg" alt="">
-        <div id="login-info">
+      <img src="images/tech-log.jpeg" alt="" />
+      <div id="login-info">
         <p>Edit Quizzes</p>
         <p>All Quizzes</p>
-        <img src="images/admin-login.jpeg" alt="">
-        </div>
+        <img src="images/admin-login.jpeg" alt="" />
+      </div>
     </div>
-    <div id="Ranking">
-        <h2>Wow You Rank 1st</h2>
-        <p>Supporting Text</p>
-    </div>
-    <div id="Photos">
-        <div class="heading-img-1">
-        <img src="images/Boy-2.png" alt="">
-        <h2>#2</h2>
-        <h3>Score</h3>
-        <p>844</p>
-        </div>
-        <div class="heading-img-2">
-        <img src="images/Girl(3).png" alt="">
-        <h3>Score</h3>
-        <p>1042</p>
-        </div>
-        <div class="heading-img-3">
-        <img src="images/boy-3 (1).png" alt="">
-        <h2>#3</h2>
-        <h3>Score</h3>
-        <p>620</p>
-    </div>
-    </div>
-    <div id="vect-pic">
-        <img src="images/Vector 15.png" alt="">
-    </div>
-    <div id="rank-win">
-        <img src="images/fluent_crown-24-filled.svg">
-    </div>
-    <div id="numbering">
-        <div class="count-numbers">
-            <p>#4</p>
-            <p>400</p>
-        </div>
-        <div class="count-numbers">
-            <p>#5</p>
-            <p>320</p>
-        </div>
-        <div class="count-numbers">
-            <p>#6</p>
-            <p>260</p>
-        </div>
-    </div>
+    <!-- RANKING SECTION -->
+<div id="Ranking">
+  <h2>Wow You Rank <span id="userRank"></span></h2>
+  <p>Supporting Text</p>
+</div>
+
+<!-- TOP 3 LEADERBOARD -->
+<div id="Photos">
+  <div class="heading-img-1">
+    <img src="images/Boy-2.png" alt="" />
+    <h3 id="Name1"></h3>
+    <p id="score1"></p>
+  </div>
+<div id="top-image">
+  <div class="heading-img-2">
+    <img src="images/Girl(3).png" alt="" />
+    <h3 id="Name2"></h3>
+    <p id="score2"></p>
+  </div>
+</div>
+  <div class="heading-img-3">
+    <img src="images/boy-3 (1).png" alt="" />
+    <h3 id="Name3"></h3>
+    <p id="score3"></p>
+  </div>
+</div>
+
+<!-- RANKS 4, 5, 6 -->
+<div id="numbering" style="position: relative;">
+  <div id="shodow-img">
+    <img src="images/Vector 15.png" alt="" style="width: 100%; height: auto;">
+  </div>
+  <div class="count-numbers" style="position: absolute; top: 10%; left: 5%; color: black; font-weight: bold;">
+    <p id="name4">Name</p>
+    <p id="score4">10</p>
+  </div>
+  <div class="count-numbers" style="position: absolute; top: 30%; left: 5%; color: black; font-weight: bold;">
+    <p id="name5">Name</p>
+    <p id="score5">20</p>
+  </div>
+  <div class="count-numbers" style="position: absolute; top: 50%; left: 5%; color: black; font-weight: bold;">
+    <p id="name6">Name</p>
+    <p id="score6">30</p>
+  </div>
+</div>
+
+
+<!-- LOGOUT BUTTON -->
+<button id="logoutBtn">Logout</button>
+
+    <script src="quize.js"></script>
+  </body>
+</html>

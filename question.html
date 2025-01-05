@@ -19,23 +19,31 @@
         </div>
     </div>
     <div id="counting">
-        <h1>Question 1 of 10</h1>
+        <h1>Question <span id="que-number"></span> of 10 </h1>
     </div>
     <div id="progess-bar">
         <div id="coloring"></div>
     </div>
     <div id="Question-ans">
-        <h3>1.This is the Question?</h3>
-        <p>Supporting Text</p>
-        <ul>
-            <li>1.Option</li>
+        <h3 id="quesBox">1.This is the Question?</h3>
+        <p id="progression">Supporting Text</p>
+        <ol id="mutipleoptions">
+            <!-- <li>1.Option</li>
             <li>2.Option</li>
             <li>3.Option</li>
-            <li>4.Option</li>
-        </ul>
+            <li>4.Option</li> -->
+        </ol>
     </div>
-    <button id="btn">Sumbit & Continue &rarr;</button>
-    <!-- <button id="btn">&larr; previous</button> -->
-     <script src="quize.js"></script>
+    <div id="score">Score: 0</div>
+    <div id="arrow  -btn">
+    <button id="previous-btn"style="display: flex; justify-content: space-between;">&larr; previous</button>
+    <button id="btn" onclick = nextQuestion() >Next &rarr;</button>
+    </div>
+  
+    
+    <script src="quize.js"></script>
+    <script>
+        displayRandomQuestion(currentIndex, datas);
+    </script>
 </body>
 </html>
