@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="quize.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;500;600&display=swap" rel="stylesheet">
+    <title>Signup Page</title>
+</head>
+<body>
+    <section id="main">
+        <div id="left-section">
+            <img src="images/mind img.png" alt="mind-img">
+        </div>
+        <div id="right-section">
+            <form id="signupForm">
+                <h2>Signup</h2>
+                <p>Sign Up to Join</p>
+
+                <!-- Full Name Input -->
+                <label for="fullName">Full Name<span style="color: red;">*</span></label><br>
+                <input type="text" id="fullName" placeholder="fullName" required autocomplete="name"><br>
+
+                <!-- Email Input -->
+                <label for="email">Email ID<span style="color: red;">*</span></label><br>
+                <input type="email" id="email" placeholder="xyz12@gmail.com" required autocomplete="email"><br>
+
+                <!-- Password Input with Toggle -->
+                <label for="password">Password<span style="color: red;">*</span></label><br>
+                <div class="password-container" style="position: relative;">
+                    <input type="password" id="password" placeholder="Password" required autocomplete="new-password">
+                    <i class="fa-regular fa-eye" id="eye" onclick="togglePassword('password', 'eye')" 
+                    style="cursor: pointer; position: absolute; right: 10px; top: 43%; transform: translateY(-50%);"></i>
+                </div>
+
+                <!-- Signup Button -->
+                <div id="login-button">
+                    <button type="submit">Signup</button>
+                </div>
+
+                <!-- Signup with Google -->
+                <div id="sign-with-google">
+                    <img src="images/G-logo.jpeg" alt="google logo">
+                    <a href="#">Sign up with Google</a>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <p id="terms-section">
+                    <label>
+                        <input type="checkbox" id="terms" required>
+                        I accept <a href="#">Terms & Conditions</a>
+                    </label>
+                </p>
+
+
+                <!-- Redirect to Login -->
+                <p id="signup">
+                    Have an account? <a href="quize.html">Log in</a>
+                </p>
+            </form>
+        </div>
+    </section>
+    <script src="quize.js"></script>
+</body>
+</html>

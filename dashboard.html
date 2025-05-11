@@ -13,48 +13,76 @@
     />
   </head>
   <body>
+    <header>
     <div id="navbar">
-      <img src="images/tech-log.jpeg" alt="" />
+      <a href="admin.html">
+        <img src="images/tech-log.jpeg" alt="admin.html" width="300" />
+      </a>      
       <div id="login-info">
-        <p>Edit Quizzes</p>
-        <p>All Quizzes</p>
-        <img src="images/admin-login.jpeg" alt="" />
+        <!-- <p>Edit Quizzes</p>
+        <p>All Quizzes</p> -->
+        <img src="images/admin-login.jpeg" alt="Admin Login" onclick="logout()" />
+        <!-- <button id="logoutBtn">Logout</button> -->
       </div>
     </div>
-    <!-- RANKING SECTION -->
-<div id="Ranking">
-  <h2>Wow You Rank <span id="userRank"></span></h2>
-  <p>Supporting Text</p>
+    <!-- First Logout Confirmation Modal -->
+<div id="logoutModal" class="modal">
+  <div class="modal-content">
+    <h2 id="modalUsername">Are you sure you want to logout?</h2>
+    <p id="usernameDisplay"></p> <!-- Display username here -->
+    <button id="confirmLogout" class="modal-btn">Yes</button>
+    <button id="cancelLogout" class="modal-btn">No</button>
+  </div>
 </div>
 
+<!-- Second Confirmation Modal for OK/Cancel -->
+<div id="finalLogoutModal" class="modal">
+  <div class="modal-content">
+    <h2 id="finalConfirmationMessage"></h2> <!-- Username will be added here -->
+    <button id="confirmFinalLogout" class="modal-btn">OK</button>
+    <button id="cancelFinalLogout" class="modal-btn">Cancel</button>
+  </div>
+</div>
+  </header>
+  <section>
+    <!-- RANKING SECTION -->
+<div id="Ranking">
+    <div><h2 id="header1">Wow You Rank <span id="userRank"></span></h2></div>
+    <div><p id="header2">Top Score</p></div>
+</div>
+</section>
+<main>
 <!-- TOP 3 LEADERBOARD -->
 <div id="Photos">
   <div class="heading-img-1">
-    <img src="images/Boy-2.png" alt="" />
-    <h3 id="Name1"></h3>
-    <p id="score1"></p>
+    <img src="images/Boy-2.png" alt="boy-3" />
+    <h3 id="Name2"></h3>
+    <p id="score2"></p>
+    <div class="rank1">#2</div>
   </div>
 <div id="top-image">
   <div class="heading-img-2">
-    <img src="images/Girl(3).png" alt="" />
-    <h3 id="Name2"></h3>
-    <p id="score2"></p>
+    <img src="images/Girl(3).png" alt="Girl">
+    <h3 id="Name1"></h3>
+    <p id="score1"></p>
   </div>
 </div>
   <div class="heading-img-3">
     <img src="images/boy-3 (1).png" alt="" />
+    <div class="rank2">#3</div>
     <h3 id="Name3"></h3>
     <p id="score3"></p>
   </div>
 </div>
-
+</main>
+<footer>
 <!-- RANKS 4, 5, 6 -->
 <div id="numbering" style="position: relative;">
   <div id="shodow-img">
     <img src="images/Vector 15.png" alt="" style="width: 100%; height: auto;">
   </div>
   <div class="count-numbers" style="position: absolute; top: 10%; left: 5%; color: black; font-weight: bold;">
-    <p id="name4">Name</p>
+    <p id="name4"> Name</p>
     <p id="score4">10</p>
   </div>
   <div class="count-numbers" style="position: absolute; top: 30%; left: 5%; color: black; font-weight: bold;">
@@ -66,11 +94,7 @@
     <p id="score6">30</p>
   </div>
 </div>
-
-
-<!-- LOGOUT BUTTON -->
-<button id="logoutBtn">Logout</button>
-
+</footer>
     <script src="quize.js"></script>
   </body>
 </html>

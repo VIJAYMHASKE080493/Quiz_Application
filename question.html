@@ -9,41 +9,61 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div id="navbar">
-        <img src="images/tech-log.jpeg" alt="">
-        <div id="login-info">
-        <p>Edit Quizzes</p>
-        <p>All Quizzes</p>
-        <img src="images/admin-login.jpeg" alt="">
+<div id="navbar">
+  <a href="admin.html">
+    <img src="images/tech-log.jpeg" alt="admin.html" width="300" />
+  </a>
+    <div id="login-info">
+      <!-- <p>Edit Quizzes</p>
+      <p>All Quizzes</p> -->
+      <img src="images/admin-login.jpeg" alt="Admin Login" id="adminImg" onclick="logout()" />
+    </div>
+  </div>
+
+<!-- First Logout Confirmation Modal -->
+<div id="logoutModal" class="modal">
+  <div class="modal-content">
+    <h2 id="modalUsername">Are you sure you want to logout?</h2>
+    <p id="usernameDisplay"></p> 
+    <button id="confirmLogout" class="modal-btn">Yes</button>
+    <button id="cancelLogout" class="modal-btn">No</button>
+  </div>
+</div>
+
+<!-- Second Confirmation Modal for OK/Cancel -->
+<div id="finalLogoutModal" class="modal">
+  <div class="modal-content">
+    <h2 id="finalConfirmationMessage"></h2> <!-- Username will be added here -->
+    <button id="confirmFinalLogout" class="modal-btn">OK</button>
+    <button id="cancelFinalLogout" class="modal-btn">Cancel</button>
+  </div>
+</div>
+</header>
+    <section id="heading-que">
+        <div id="question1">Question 1 of 10</div>
+        <div id="progressContainer" style="width: 100%; background-color: #ddd;">
+            <div id="coloring" style="width: 0%; height: 20px; background-color: #F3BD00;"></div>
         </div>
-    </div>
-    <div id="counting">
-        <h1>Question <span id="que-number"></span> of 10 </h1>
-    </div>
-    <div id="progess-bar">
-        <div id="coloring"></div>
-    </div>
+                  
     <div id="Question-ans">
-        <h3 id="quesBox">1.This is the Question?</h3>
-        <p id="progression">Supporting Text</p>
-        <ol id="mutipleoptions">
+        <div id="quiz-page">   
+            <div id="quesBox">1.This is the Question?</div>
+            <p id="progression">Supporting Text</p>
+            <ul  id="optionsBox">
             <!-- <li>1.Option</li>
             <li>2.Option</li>
             <li>3.Option</li>
             <li>4.Option</li> -->
-        </ol>
+            </ul>
+        </div>
     </div>
-    <div id="score">Score: 0</div>
-    <div id="arrow  -btn">
-    <button id="previous-btn"style="display: flex; justify-content: space-between;">&larr; previous</button>
-    <button id="btn" onclick = nextQuestion() >Next &rarr;</button>
+    <!-- <div id="score">Score: 0</div> -->
+    <div id="arrow-btn">
+    <button id="previousButton" onclick= previousQuestion() >&larr; previous</button>
+    <button id="nextButton" disabled onclick = nextQuestion() >Next &rarr;</button>
     </div>
-  
-    
+    </section>
     <script src="quize.js"></script>
-    <script>
-        displayRandomQuestion(currentIndex, datas);
-    </script>
+    
 </body>
 </html>

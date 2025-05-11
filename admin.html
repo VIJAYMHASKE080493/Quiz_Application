@@ -10,22 +10,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<form onsubmit="return data()"action="question.html">
+<form onsubmit="return togglePassword()"action="question.html">
     <div id="navbar">
-            <img src="images/tech-log.jpeg" alt="">
+      <a href="admin.html">
+        <img src="images/tech-log.jpeg" alt="admin.html" width="300" />
+      </a>
+      
         <div id="login-info">
-            <p>Edit Quizzes</p>
-            <p>All Quizzes</p>
-            <img src="images/admin-login.jpeg" alt="">
+          <!-- <p>Edit Quizzes</p>
+          <p>All Quizzes</p> -->
+          <img src="images/admin-login.jpeg" alt="Admin Login" id="adminImg"  onclick="logout()"/>
         </div>
-    </div>
+      </div>
+    </header>
     <div id="dashboard-header">
             <h1>Let's Start the Quiz</h1>
             <p>&#x1F558;10min</p>
             <p>&#128900;Disclaimers</p>
             <p>&#128900;Disclaimers</p>
     </div>
-    <div id="dashboard">
+    <div id="dashboard1">
         <div id="display-screen">
                 <img src="images/dash-1.png" alt="">
             <div id="short-info">
@@ -36,5 +40,24 @@
         <button id="submit">Start Quiz</button>
     </div>
 </form>
+
+<div id="logoutModal" class="modal">
+  <div class="modal-content">
+    <h2 id="modalUsername">Are you sure you want to logout?</h2>
+    <p id="usernameDisplay"></p> 
+    <button id="confirmLogout" class="modal-btn">Yes</button>
+    <button id="cancelLogout" class="modal-btn">No</button>
+  </div>
+</div>
+
+
+<div id="finalLogoutModal" class="modal">
+  <div class="modal-content">
+    <h2 id="finalConfirmationMessage"></h2> 
+    <button id="confirmFinalLogout" class="modal-btn">OK</button>
+    <button id="cancelFinalLogout" class="modal-btn">Cancel</button>
+  </div>
+</div>
+        <script src="quize.js"></script>
     </body>
 </html>

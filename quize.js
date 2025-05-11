@@ -1,560 +1,632 @@
-function data() {
-  const username = document.getElementById("username").value;
-  const EmailID = document.getElementById("EmailID").value;
-  const Password = document.getElementById("Password").value;
 
-  if (username == "" || EmailID == "" || Password == "") {
-    alert("Sabhi fields mandatory hain");
-    return false;
-  }
-  if (username.length < 10) {
-    alert("Username 10 digits ka hona chahiye!");
-    return false;
-  }
-  if (EmailID.length < 10) {
-    alert("Email ID bahut chhota hai!");
-    return false;
-  }
-  if (Password.length < 10) {
-    alert("Password kam se kam 10 characters ka hona chahiye!");
-    return false;
+document.addEventListener("DOMContentLoaded", () => {
+  // LocalStorage में Quiz Data पहले से है या नहीं चेक करें
+  let storedQuizData = JSON.parse(localStorage.getItem("quizData"));
+
+  if (storedQuizData) {
+    quizData = storedQuizData;  
+    console.log("Quiz Data Loaded from localStorage");
+  } else {
+    console.log("No Quiz Data Found. Saving it...");
+    localStorage.setItem("quizData", JSON.stringify(quizData));
   }
 
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  // if (users.length >= 6) {
-  //   alert("Aap maximum 6 users hi register kar sakte hain");
-  //   return false;
-  // }
+  handleSignupForm();
+  handleLoginForm();
+  prepareQuiz();
+  displayQuestion();
+  displayLeaderboard();
+  displayCurrentUserScore();
+});
 
-  const userExists = users.some((user) => user.username === username);
-  if (userExists) {
-    alert("Username already exists!");
-    return false;
+
+function handleSignupForm() {
+  const signupForm = document.getElementById("signupForm");
+  if (signupForm) {
+    signupForm.addEventListener("submit", handleFormSubmit);
+  } else {
+    console.log("Signup form not found");
+  }
+  
+}
+
+function handleLoginForm() {
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      validateLogin(event);
+    });
+  } else {
+    console.log("loginForm element not found");
+  }
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault(); 
+
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!fullName || !email || !password) {
+    alert("All fields are required!");
+    return;
   }
 
-  const emailExists = users.some((user) => user.email === EmailID);
-  if (emailExists) {
-    alert("Email already exists!");
-    return false;
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  users
+  if (users.find((user) => user.email === email)) {
+    alert("Email already registered!");
+    return;
   }
 
-  const newUser = { username, email: EmailID, password: Password, score: 0 };
+  const newUser = { id: Date.now(), fullName, email, password, score: 0,};
   users.push(newUser);
 
   localStorage.setItem("users", JSON.stringify(users));
-  alert("User successfully register ho gaya!");
-  return true;
+  alert("Signup successful!");
+  window.location.href = "quize.html";
 }
 
-function updateScore(username) {
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find((user) => user.username === username);
+function validateLogin(event) {
+  event.preventDefault(); 
 
-  if (user) {
-    user.score += 10;
-    localStorage.setItem("users", JSON.stringify(users));
-    alert(`new score: ${user.score}`);
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value.trim();
+
+  if (!email || !password) {
+    alert("All fields are required!");
+    return;
   }
-}
 
-let currentUser = null;
-
-function login() {
-  const email = document.getElementById("login-username").value;
-  const password = document.getElementById("login-password").value;
-
-  let users = JSON.parse(localStorage.getItem("users"));
-  const user = users.find(
-    (user) => user.email === email && user.password === password
-  );
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find((u) => u.email === email && u.password === password);
 
   if (user) {
-    window.location.href = "admin.html";
-    localStorage.setItem("userLoggedIn", JSON.stringify(user));
-    alert("Login successful!");
-    currentUser = user.username; 
-    displayUserScore(currentUser);
+    alert("Login successful");
+    localStorage.setItem("loggedInUserId", user.id); 
+    window.location.href = "admin.html"; 
   } else {
-    alert("Invalid username या password!");
+    alert("Invalid credentials");
   }
 }
 
 
-function displayUserScore(username) {
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find((user) => user.username === username);
-
-  if (user) {
-    document.getElementById("score").innerText = `Score: ${user.score}`;
-  } else {
-    alert("User not found!");
-  }
-}
-
-
-const quizData = [
+let quizData = [
   {
-    que: "What does HTML stand for?",
-    options: [
-      "Hyper Text Markup Language",
-      "High Text Markup Language",
-      "Hyperlinks and Text Markup Language",
-      "Hyper Tool Markup Language",
+    question: "What is the effect of the i tag?",
+    answers: ["<i>", "<italic>", "<it>", "<pre>"],
+    correct: 0,
+  },
+  {
+    question: "What does the b tag do?",
+    answers: [
+      "It makes text bold.",
+      "It italicizes text.",
+      "It underlines text.",
+      "It changes the font color.",
     ],
-    answer: "Hyper Text Markup Language",
-    choosedAnswer: null,
+    correct: 0,
   },
   {
-    que: "Which HTML element is used to define the title of a document?",
-    options: ["<head>", "<title>", "<meta>", "<footer>"],
-    answer: "<title>",
-    choosedAnswer: null,
+    question: "Which tag is used to create a hyperlink?",
+    answers: ["<a>", "<href>", "<link>", "<url>"],
+    correct: 0,
   },
   {
-    que: "Which CSS property controls the text size?",
-    options: ["font-size", "text-size", "text-style", "font-style"],
-    answer: "font-size",
-    choosedAnswer: null,
+    question: "Which tag is used for the largest heading?",
+    answers: ["<h6>", "<h1>", "<heading>", "<h5>"],
+    correct: 0,
   },
   {
-    que: "How do you create a function in JavaScript?",
-    options: [
-      "function = myFunction()",
-      "function myFunction()",
-      "create myFunction()",
-      "function:myFunction()",
+    question: "Which HTML tag is used to create an ordered list?",
+    answers: ["<ol>", "<ul>", "<li>", "<list>"],
+    correct: 0,
+  },
+  {
+    question: "Which HTML tag is used to define an image?",
+    answers: ["<img>", "<picture>", "<image>", "<src>"],
+    correct: 0,
+  },
+  {
+    question: "What is the correct syntax for a comment in HTML?",
+    answers: [
+      "<!-- comment -->",
+      "<! comment >",
+      "// comment",
+      "/* comment */",
     ],
-    answer: "function myFunction()",
-    choosedAnswer: null,
+    correct: 0,
   },
   {
-    que: "Which tag is used to define an internal style sheet in HTML?",
-    options: ["<css>", "<style>", "<script>", "<styles>"],
-    answer: "<style>",
-    choosedAnswer: null,
+    question: "Which attribute specifies the source of an image?",
+    answers: ["src", "alt", "href", "link"],
+    correct: 0,
   },
   {
-    que: "What is the correct syntax to change the background color of a page in CSS?",
-    options: [
-      "background-color: #FFFFFF;",
-      "bgcolor: #FFFFFF;",
-      "color: #FFFFFF;",
-      "background: #FFFFFF;",
+    question: "What does the <title> tag define?",
+    answers: [
+      "The title of the document.",
+      "A title for a paragraph.",
+      "The main heading of the page.",
+      "A title for an image.",
     ],
-    answer: "background-color: #FFFFFF;",
-    choosedAnswer: null,
+    correct: 0,
   },
   {
-    que: "Which of the following is a valid JavaScript variable name?",
-    options: [
-      "1stVariable",
-      "first-variable",
-      "_firstVariable",
-      "first variable",
+    question: "Which tag is used to define a table row?",
+    answers: ["<tr>", "<td>", "<table>", "<row>"],
+    correct: 0,
+  },
+  {
+    question: "What does the <meta> tag do?",
+    answers: [
+      "Provides metadata about the document.",
+      "Defines the main content of the page.",
+      "Links an external stylesheet.",
+      "Creates a hyperlink.",
     ],
-    answer: "_firstVariable",
-    choosedAnswer: null,
+    correct: 0,
   },
   {
-    que: "What does the 'this' keyword refer to in JavaScript?",
-    options: [
-      "The global object",
-      "The current function",
-      "The current object",
-      "The previous object",
+    question: "Which tag is used to embed a video in HTML?",
+    answers: ["<video>", "<embed>", "<media>", "<movie>"],
+    correct: 0,
+  },
+  {
+    question: "Which tag is used to create a form in HTML?",
+    answers: ["<form>", "<input>", "<textarea>", "<submit>"],
+    correct: 0,
+  },
+  {
+    question: "What does the <br> tag do?",
+    answers: [
+      "Inserts a line break.",
+      "Makes text bold.",
+      "Adds a horizontal line.",
+      "Creates a new paragraph.",
     ],
-    answer: "The current object",
-    choosedAnswer: null,
+    correct: 0,
   },
   {
-    que: "How do you link an external CSS file in HTML?",
-    options: [
-      "<link rel='stylesheet' href='styles.css'>",
-      "<style src='styles.css'>",
-      "<stylesheet>styles.css</stylesheet>",
-      "<link href='styles.css' rel='stylesheet'>",
-    ],
-    answer: "<link rel='stylesheet' href='styles.css'>",
-    choosedAnswer: null,
-  },
-  {
-    que: "Which property is used to change the font of an element in CSS?",
-    options: ["font-family", "font-style", "text-font", "font-weight"],
-    answer: "font-family",
-    choosedAnswer: null,
-  },
-  {
-    que: "What does the alert() method do in JavaScript?",
-    options: [
-      "Displays a message",
-      "Logs a message to the console",
-      "Sends a notification",
-      "Creates a pop-up window",
-    ],
-    answer: "Displays a message",
-    choosedAnswer: null,
-  },
-  {
-    que: "Which attribute is used to specify the URL of an external script in HTML?",
-    options: ["src", "href", "link", "script"],
-    answer: "src",
-    choosedAnswer: null,
-  },
-  {
-    question: "How can you make a numbered list in HTML?",
-    options: ["<ol>", "<ul>", "<list>", "<dl>"],
-    answer: "<ol>",
-    choosedAnswer: null,
-  },
-  {
-    que: "Which CSS property is used for spacing between elements?",
-    options: ["margin", "padding", "spacing", "border"],
-    answer: "margin",
-    choosedAnswer: null,
-  },
-  {
-    que: "What is the output of 2 + '2' in JavaScript?",
-    options: ["22", "4", "undefined", "Error"],
-    answer: "22",
-    choosedAnswer: null,
-  },
-  {
-    que: "What is the purpose of the <div> tag in HTML?",
-    options: [
-      "To define a division or section",
-      "To create a hyperlink",
-      "To define an image",
-      "To define a table",
-    ],
-    answer: "To define a division or section",
-    choosedAnswer: null,
-  },
-  {
-    que: "Which CSS property controls the visibility of an element?",
-    options: ["display", "visibility", "opacity", "hidden"],
-    answer: "visibility",
-    choosedAnswer: null,
-  },
-  {
-    que: "How do you declare a JavaScript array?",
-    options: [
-      "var myArray = []",
-      "var myArray = ()",
-      "var myArray = {}",
-      "var myArray = ||",
-    ],
-    answer: "var myArray = []",
-    choosedAnswer: null,
-  },
-  {
-    que: "What is the correct way to add a comment in CSS?",
-    options: [
-      "// this is a comment",
-      "<!-- this is a comment -->",
-      "/* this is a comment */",
-      "# this is a comment",
-    ],
-    answer: "/* this is a comment */",
-    choosedAnswer: null,
-  },
-  {
-    que: "How can you select an element with the id 'myId' in JavaScript?",
-    options: [
-      "document.getElementById('myId')",
-      "document.selectElement('myId')",
-      "document.querySelector('#myId')",
-      "Both A and C",
-    ],
-    answer: "Both A and C",
-    choosedAnswer: null,
+    question: "Which tag is used to define a dropdown list?",
+    answers: ["<select>", "<option>", "<dropdown>", "<list>"],
+    correct: 0,
   },
 ];
 
 let currentIndex = 0;
-// let totalScore = 0;
-const selectedQue = quizData.sort(() => Math.random() - 0.5).slice(0, 10);
-console.log(selectedQue);
-localStorage.setItem("quizdates", JSON.stringify(selectedQue));
-let datas = JSON.parse(localStorage.getItem("quizdates")) || [];
+let score = 0;
+let totalQuestions = 10;
+let randomQuestions = [];
 
-let totalQuestions = selectedQue.length;
-console.log(totalQuestions, currentIndex);
+function prepareQuiz() {
+  randomQuestions = [...quizData]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, totalQuestions);
+}
 
-function displayRandomQuestion(currentIndex, datas) {
-  let userLoggedIn = JSON.parse(localStorage.getItem("userLoggedIn"));
-  console.log(userLoggedIn);
-  if (datas && datas.length > 0) {
-    const randomQue = datas[currentIndex];
-    document.getElementById("que-number").innerHTML = currentIndex + 1;
-    document.getElementById("quesBox").innerHTML = `${currentIndex + 1}. ${
-      randomQue.que
-    }`;
+function displayQuestion() {
+  const currentQuestion = randomQuestions[currentIndex];
+  const questionNumber = currentIndex + 1;
 
-    const list = document.getElementById("mutipleoptions");
-    list.innerHTML = "";
+  const quesBox = document.getElementById("quesBox");
+  const questionNumberElement = document.getElementById("question1");
+  const optionsList = document.getElementById("optionsBox");
 
-    randomQue.options.forEach((option) => {
-      const listItem = document.createElement("li");
-      listItem.textContent = option;
+  if (!quesBox || !questionNumberElement || !optionsList) {
+    return;
+  }
 
-      if (randomQue.choosedAnswer === option) {
-        listItem.classList.add("selected");
-        styleSelectedOption(listItem);
+  let headerText = `Question ${questionNumber} of ${totalQuestions}`;
+  if (currentIndex === totalQuestions - 2) {
+    headerText = "Last 2 Questions Left";
+  } else if (currentIndex === totalQuestions - 1) {
+    headerText = "Hey, this is the Last Question";
+  }
+  questionNumberElement.innerText = headerText;
+
+  quesBox.innerText = `${questionNumber}. ${currentQuestion.question}`;
+
+  optionsList.innerHTML = "";
+
+  for (let i = 0; i < currentQuestion.answers.length; i++) {
+    const option = currentQuestion.answers[i];
+    const listItem = document.createElement("li");
+    listItem.textContent = option;
+
+    listItem.addEventListener("click", function() {
+      currentQuestion.choosedAnswer = i;  
+      if (i === currentQuestion.correct) {
+        score += 10;  
+        listItem.classList.add("correct");
+      } else {
+        listItem.classList.add("wrong");
+        optionsList.children[currentQuestion.correct].classList.add("correct");
       }
 
-      
-      listItem.addEventListener("click", () => {
-        resetSelection(list); 
-        listItem.classList.add("selected");
-        styleSelectedOption(listItem); 
-
-        randomQue.choosedAnswer = option;
-
-        localStorage.setItem("quizdates", JSON.stringify(datas));
-
-        checkAnswer(option, randomQue, userLoggedIn.username);
-      });
-
-      list.appendChild(listItem);
+      const allItems = optionsList.getElementsByTagName("li");
+      for (let j = 0; j < allItems.length; j++) {
+        allItems[j].classList.remove("selected");
+      }
+      listItem.classList.add("selected");
+      document.getElementById("nextButton").disabled = false;
     });
 
-    const previousbtn = document.getElementById("previous-btn");
-    if (previousbtn) {
-      previousbtn.style.visibility = currentIndex === 0 ? "hidden" : "visible";
-    }
-
-    updateProgress();
+    optionsList.appendChild(listItem);  
   }
+  
+  const previousButton = document.getElementById("previousButton");
+  if (previousButton) {
+    if (currentIndex === 0) {
+      previousButton.style.visibility = "hidden";  
+    } else {
+      previousButton.style.visibility = "visible";  
+    }
+  }
+
+  updateProgress();  
 }
 
-function styleSelectedOption(element) {
-  element.style.backgroundColor = "#f3bd00";
-  element.style.borderRadius = "10px";
-  element.style.width = "fit-content";
-}
 
-function resetSelection(list) {
-  const selectedElements = list.querySelectorAll(".selected");
-  selectedElements.forEach((el) => {
-    el.classList.remove("selected");
-    el.style = "";
-  });
-}
 
 function nextQuestion() {
-  if (currentIndex < totalQuestions - 1) {
-    currentIndex++;
-    displayRandomQuestion(currentIndex, datas);
-  } else {
-    let userLoggedIn = JSON.parse(localStorage.getItem("userLoggedIn"));
-    saveScore(userLoggedIn.username); 
-    alert("Quiz Complete! Redirecting to dashboard.");
-    window.location.href = "dashboard.html";
-  }
+const currentquestion = randomQuestions[currentIndex];
+
+if(currentquestion.choosedAnswer==null){
+  alert("please select an answer before proceding forward");
+  return;
 }
 
+  if (currentIndex < totalQuestions - 1) {
+    currentIndex++;
+    displayQuestion();
+    const selectedAnswer = randomQuestions[currentIndex].choosedAnswer;
+    const listItems = document.getElementById("optionsBox").children;
+    Array.from(listItems).forEach((item) => item.classList.remove("selected"));
+    if (selectedAnswer !== undefined) {
+      listItems[selectedAnswer].classList.add("selected");
+    }
+  } else {
+    saveScore(score);
+    setTimeout(() => {
+      alert("Quiz Complete! Your score: " + score);
+      window.location.href = "dashboard.html";
+    }, 500);
+  }
+}
 
 function previousQuestion() {
   if (currentIndex > 0) {
     currentIndex--;
-    console.log("previousQuestion", currentIndex);
-    displayRandomQuestion(currentIndex, datas);
-  } else {
-    alert("You're already at the first question!");
+    displayQuestion();
+    const selectedAnswer = randomQuestions[currentIndex].choosedAnswer;
+    const listItems = document.getElementById("optionsBox").children;
+    Array.from(listItems).forEach((item) => item.classList.remove("selected"));
+    if (selectedAnswer !== undefined) {
+      listItems[selectedAnswer].classList.add("selected");
+    }
   }
 }
 
 function updateProgress() {
-  if (totalQuestions <= 0) {
-    console.error("Invalid totalQuestions value");
-    return;
-  }
+  const progressPercentage = ((currentIndex + 1) / totalQuestions) * 100;
+  document.getElementById("coloring").style.width = progressPercentage + "%";
+}
 
-  if (currentIndex < 0 || currentIndex >= totalQuestions) {
-    console.error("currentIndex is out of valid bounds");
-    return;
-  }
+function saveScore(score) {
+  const loggedInUserId = localStorage.getItem("loggedInUserId");
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find((u) => u.id == loggedInUserId);
 
-  const progressPercentage = Math.min(
-    ((currentIndex + 1) / totalQuestions) * 100,
-    100
-  );
+  if (user) {
+    const testDate = new Date().toLocaleString();
 
-  const progressBar = document.getElementById("coloring");
-  if (progressBar) {
-    progressBar.style.width = progressPercentage + "%";
+    // Time calculation
+    const startTime = Number(localStorage.getItem("quizStartTime"));
+    const endTime = Date.now();
+    const timeTakenSec = Math.floor((endTime - startTime) / 1000);
+
+    function formatTime(sec) {
+      const mins = Math.floor(sec / 60);
+      const secs = sec % 60;
+      return `${mins} min ${secs} sec`;
+    }
+
+    // Prepare questions data
+    const questionsData = randomQuestions.map(q => ({
+      question: q.question,
+      answers: q.answers,                         // ✅ Save all options
+      selectedIndex: q.choosedAnswer,              // ✅ Selected option index
+      selectedAnswer: q.answers[q.choosedAnswer] || null, // ✅ Selected option text
+      correctIndex: q.correct,                     // ✅ Correct option index
+      correctAnswer: q.answers[q.correct] || null   // ✅ Correct option text
+    }));
+
+    const correctAnswerCount = questionsData.filter(q => q.selectedIndex === q.correctIndex).length;
+
+    // Update user data
+    user.score = score;
+    user.testGiven = (user.testGiven || 0) + 1;
+    user.testHistory = user.testHistory || [];
+
+    user.testHistory.push({
+      testIndex: user.testHistory.length + 1,
+      score: score,
+      correctAnswers: correctAnswerCount,
+      date: testDate,
+      timeTaken: formatTime(timeTakenSec),
+      timeTakenInSeconds: timeTakenSec,
+      questions: questionsData
+    });
+
+    // Save updated user data
+    localStorage.setItem("users", JSON.stringify(users));
+    displayUserStats();
   } else {
-    console.error("Progress bar element not found");
+    console.log("User not found in localStorage");
   }
 }
 
-let totalScore = 0;
 
-function checkAnswer(chosenAnswer, randomQue, username) {
-  if (!username) {
-    alert("Please login to submit answers!");
-    return;
+
+
+
+
+function displayUserStats() {
+  const loggedInUserId = localStorage.getItem("loggedInUserId");
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const user = users.find((u) => u.id == loggedInUserId);
+
+  if (user) {
+    const testCount = user.testGiven || 0; // Agar undefined ho to 0 rakho
+    const testGivenElement = document.getElementById("userTestGiven");
+
+    if (testGivenElement) {
+      testGivenElement.innerText = `Tests Given: ${testCount}`;
+    } else {
+      console.log("Element with id 'userTestGiven' not found");
+    }
   }
+}
 
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find((user) => user.username === username);
 
-  if (!user) {
-    alert("User not found!");
-    return;
+function displayLeaderboard() {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  users.sort(function(a, b) {
+    return b.score - a.score;
+  });
+
+  for (let i = 0; i < 3; i++) {
+    const scoreElement = document.getElementById(`score${i + 1}`);
+    const nameElement = document.getElementById(`Name${i + 1}`);
+
+    if (scoreElement && nameElement && users[i]) {
+      scoreElement.textContent = `Score: ${users[i].score}`;  
+      nameElement.textContent = users[i].fullName;  
+    }
   }
 
   
-  if (chosenAnswer === randomQue.answer && !randomQue.isCorrect) {
-    user.score += 10; 
-    randomQue.isCorrect = true;
-  } else if (chosenAnswer !== randomQue.answer && randomQue.isCorrect) {
-    user.score -= 10; 
-    randomQue.isCorrect = false;
-  }
+  for (let i = 3; i < 10; i++) {
+    const nameElement = document.getElementById(`name${i + 1}`);
+    const scoreElement = document.getElementById(`score${i + 1}`);
 
-  localStorage.setItem("users", JSON.stringify(users)); 
-  localStorage.setItem("quizdates", JSON.stringify(datas)); 
-  document.getElementById("score").innerText = `Score: ${user.score}`; 
-}
-
-
-console.log(checkAnswer);
-
-function saveScore(username) {
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  const user = users.find((user) => user.username === username);
-
-  if (!user) {
-    alert("User not found! Unable to save score.");
-    return;
-  }
-
-  localStorage.setItem("users", JSON.stringify(users)); 
-  alert("Score saved successfully!");
-}
-
-
-// Window.onload = function() {
-//   saveScore(currentUser, user.score);
-// }
-
-// function displayLeaderboard() {
-//   let usersData = localStorage.getItem("users");
-//   let users;
-
-//   if (usersData) {
-//     try {
-//       users = JSON.parse(usersData);
-//     } catch (error) {
-//       console.error("Error reading user data:", error);
-//       users = [];
-//     }
-//   } else {
-//     users = [];
-//   }
-
-//   if (users.length === 0) {
-//     console.log("No user data available");
-//     const leaderboardContainer = document.getElementById("leaderboard");
-//     if (leaderboardContainer) {
-//       leaderboardContainer.innerHTML = "<p>No users available</p>";
-//     }
-//     return;
-//   }
-
-//   users.sort(function (a, b) {
-//     return (b.score || 0) - (a.score || 0);
-//   });
-
-//   const leaderboard = document.getElementById("leaderboard");
-//   if (leaderboard) {
-//     leaderboard.innerHTML = "";
-
-//     users.slice(0, 6).forEach((user, index) => {
-//       const userElement = document.createElement("p");
-//       userElement.textContent = `${index + 1}. ${
-//         user.username || "Unknown"
-//       } - ${user.score || 0}`;
-//       leaderboard.appendChild(userElement);
-//     });
-//   }
-// }
-
-
-
-window.addEventListener("DOMContentLoaded", () => {
-  for (let i = 1; i <= 6; i++) {
-    const nameElement = document.getElementById(`Name${i}`) || document.getElementById(`name${i}`);
-    const scoreElement = document.getElementById(`score${i}`);
-
-    if (nameElement) {
-      const users = JSON.parse(localStorage.getItem(`users`));
-      const savedName = users[i].username
-      nameElement.innerText = savedName || "Name";
-    }
     
-    
-    if (scoreElement) {
-      const users = JSON.parse(localStorage.getItem(`users`));
-      const savedScore = users[i].score
-            scoreElement.innerText = savedScore || "0"; 
+    if (nameElement && scoreElement && users[i]) {
+      nameElement.textContent = `#${i + 1} ${users[i].fullName}`;  
+      scoreElement.textContent = users[i].score;  
     }
-  }
-  console.log("Data loaded!");
-});
-
-
-window.addEventListener("beforeunload", () => {
-  for (let i = 1; i <= 6; i++) {
-    const nameElement = document.getElementById(`Name${i}`) || document.getElementById(`name${i}`);
-    const scoreElement = document.getElementById(`score${i}`);
-
-    if (nameElement) {
-      localStorage.setItem(`name${i}`, nameElement.innerText);
-    }
-    
-    if (scoreElement) {
-      localStorage.setItem(`score${i}`, scoreElement.innerText);
-    }
-  }
-  console.log("Data saved!");
-});
-
-
-
-function setupLogoutButton() {
-  var logoutBtn = document.getElementById("logoutBtn");
-
-  if (logoutBtn) {
-    logoutBtn.onclick = function () {
-      const confirmation = confirm("Are you sure you want to log out?");
-      if (confirmation) {
-        localStorage.removeItem("userLoggedIn");
-        window.location.href = "quize.html";
-      }
-    };
   }
 }
 
-window.onload = function () {
-  if (currentUser) {
-    displayUserScore(currentUser);
+function togglePassword(fieldId, iconId) {
+  const passwordField = document.getElementById(fieldId);
+  const eyeIcon = document.getElementById(iconId);
+
+  if (passwordField && eyeIcon) {
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+      eyeIcon.classList.remove("fa-eye");
+      eyeIcon.classList.add("fa-eye-slash");
+    } else {
+      passwordField.type = "password";
+      eyeIcon.classList.remove("fa-eye-slash");
+      eyeIcon.classList.add("fa-eye");
+    }
+  } else {
+    console.log("passwordField or eyeIcon not found");
   }
-  // displayLeaderboard();
-  setupLogoutButton();
-};
+}
 
-// if (currentIndex == 0) {
-//   // displayRandomQuestion(currentIndex, datas);
-//   // console.log("displayRandomQuestion.....", displayRandomQuestion);
-// }
+function logout() {
+  if (confirm("Are you sure to logout?")) {
+    localStorage.removeItem("loggedInUserId");
+    window.location.href = "/quize.html";
+  }
+}
 
-// document.getElementById("btn").addEventListener("click", () => {
-//   console.log("currentIndex...............", currentIndex);
-//   nextQuestion(currentIndex);
-// });
 
-// document.getElementById("previous-btn").addEventListener("click", function () {
-//   previousQuestion(currentIndex);
-// });
+const score6Element = document.getElementById("score6");
+const userRankLabel = document.getElementById("numbering");
+const rankElement = document.getElementById("userRank");
+
+
+if (score6Element) {
+  
+  const loggedInUserId = localStorage.getItem("loggedInUserId");
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const loggedInUser = users.find(user => user.id == loggedInUserId);
+  if (loggedInUser) {
+    
+    const sortedUsers = users.sort((a, b) => b.score - a.score);
+    const rank = sortedUsers.findIndex(user => user.id == loggedInUserId) + 1;
+
+    function getRankSuffix(rank) {
+      if (rank === 1) return "st";
+      if (rank === 2) return "nd";
+      if (rank === 3) return "rd";
+      return "th";
+    }
+    if (rank > 2 && rank <= 5)  {
+      userRankLabel.textContent = `#${rank}`;
+      score6Element.textContent = `${loggedInUser.fullName} - ${loggedInUser.score}`;
+    } else {
+      rankElement.textContent = "#6";
+      score6Element.textContent = ""; 
+    }
+
+    if (rankElement) {
+      console.log("rankElement...", rankElement);
+      const rankWithSuffix = rank + getRankSuffix(rank);
+      rankElement.innerText = `Your rank: ${rankWithSuffix}`;
+    }
+  }
+}
+
+
+
+
+function logout() {
+  const modal = document.getElementById("logoutModal");
+  const confirmButton = document.getElementById("confirmLogout");
+  const cancelButton = document.getElementById("cancelLogout");
+  const usernameDisplay = document.getElementById("usernameDisplay");
+
+  const loggedInUserId = localStorage.getItem("loggedInUserId");
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+  const loggedInUser = users.find((user) => user.id == loggedInUserId);
+
+  if (loggedInUser) {
+    usernameDisplay.textContent = `Are you sure you want to logout, ${loggedInUser.fullName}?`;
+  } else {
+    usernameDisplay.textContent = "Are you sure you want to logout?";
+  }
+  if (modal) {
+    modal.style.display = "flex"; 
+  }
+  confirmButton.onclick = function () {
+    modal.style.display = "none"; 
+    showFinalLogoutModal(loggedInUser); 
+  };
+  cancelButton.onclick = function () {
+    modal.style.display = "none"; 
+  };
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+}
+
+
+function showFinalLogoutModal(user) {
+  const finalModal = document.getElementById("finalLogoutModal");
+  const finalMessage = document.getElementById("finalConfirmationMessage");
+  const confirmFinalButton = document.getElementById("confirmFinalLogout");
+  const cancelFinalButton = document.getElementById("cancelFinalLogout");
+
+  
+  if (user) {
+    finalMessage.textContent = `Are you really sure you want to logout, ${user.fullName}?`;
+  } else {
+    finalMessage.textContent = "Are you really sure you want to logout?";
+  }
+
+  if (finalModal) {
+    finalModal.style.display = "flex"; 
+  }
+  confirmFinalButton.onclick = function () {
+    localStorage.removeItem("loggedInUserId");
+    window.location.href = "/quize.html"; 
+  };
+
+  
+  cancelFinalButton.onclick = function () {
+    finalModal.style.display = "none"; 
+  };
+
+  window.onclick = function (event) {
+    if (event.target === finalModal) {
+      finalModal.style.display = "none";
+    }
+  };
+}
+
+
+function displayCurrentUserScore() {
+
+  const loggedInUserId = localStorage.getItem("loggedInUserId");
+
+  if (!loggedInUserId) {
+    console.log("No user is logged in.");
+    return; 
+  }
+
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  const loggedInUser = users.find(user => user.id == loggedInUserId);
+
+  if (loggedInUser) {
+    const score = loggedInUser.score;
+    const header2Element = document.getElementById("header2");
+
+    if (header2Element) {
+      header2Element.innerText = "Your Score: " + score;
+    } else {
+      console.log("header2 element not found.");
+    }
+  } else {
+    console.log("User not found in localStorage.");
+  }
+}
+
+
+function displayTimeTaken(timeTaken) {
+  const ulElement = document.createElement("ul");
+  ulElement.innerHTML = `Time Taken: <span>${timeTaken}</span>`;
+
+  const parentElement = document.getElementById("someContainer"); // जहाँ भी इसे दिखाना है वहां का ID दें
+  if (parentElement) {
+    parentElement.appendChild(ulElement);
+  } else {
+    console.log("Target container not found.");
+  }
+}
+
+let startTime;
+
+function startQuiz() {
+  startTime = new Date().getTime(); // Start time in milliseconds
+  localStorage.setItem("quizStartTime", startTime);
+}
+
+function saveTimeTaken() {
+  const startTime = localStorage.getItem("quizStartTime");
+  if (startTime) {
+    const endTime = new Date().getTime();
+    const timeTaken = Math.floor((endTime - startTime) / 1000); // Convert to seconds
+    localStorage.setItem("quizTimeTaken", timeTaken);
+  }
+}
+
+function getTimeTaken() {
+  const timeTaken = localStorage.getItem("quizTimeTaken");
+  if (timeTaken) {
+    const minutes = Math.floor(timeTaken / 60);
+    const seconds = timeTaken % 60;
+    return `Time Taken: ${minutes} min ${seconds} sec`;
+  }
+  return "Time not recorded.";
+}
+
+startQuiz();  // जब क्विज स्टार्ट हो
+setTimeout(() => { 
+  saveTimeTaken(); 
+  console.log(getTimeTaken()); // टाइम को कंसोल में दिखाने के लिए
+}, 5000);  // 5 सेकंड बाद टेस्ट पूरा मानकर
+
+
+
+

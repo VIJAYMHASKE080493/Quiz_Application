@@ -1,55 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quize App</title>
-    <link rel="stylesheet" href="quize.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
-  <body>
-    <section id="container">
-      <div id="login-page">
-        <div class="Character">
-          <img src="images/mind img.png" alt="images" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="quize.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Login Page</title>
+</head>
+<body>
+    <section id="main">
+        <div id="left-section">
+            <img src="images/mind img.png" alt="mind-img">
         </div>
+        <div id="right-section">
+            <form id="loginForm">
+                <h2>Login</h2>
+                <p>Please enter your details below.</p>
 
-        <div id="form">
-          <h2>Login</h2>
-          <span>Please enter your details below</span>
-          <div class="inpute-box">
-            <p>EmailID<span>*</span></p>
-            <input type="text" placeholder="xyz@gmail.com" id="login-username" />
-          </div>
-          <div class="inpute-box">
-            <p>Password<span>*</span></p>
-            <input type="text" placeholder="Password" id="login-password" />
-            <i class="fa-regular fa-eye-slash"></i>
-          </div>
-          <button id="click-on" type="submit" onclick="login()">Login</button>
-          <div class="sign-tag">
-            <img src="images/G-logo.jpeg" alt="" />
-            <p>Sign up with Google</p>
-          </div>
-          <div class="Sign-up-link">
-            <p>Don't have an account?<a href="signup.html">Sign up?</a></p>
-          </div>
+                <!-- Email Input -->
+                <label for="loginEmail">Email ID<span style="color: red;">*</span></label><br>
+                <input type="email" id="loginEmail" placeholder="xyz12@gmail.com" required autocomplete="username"><br>
+
+                <!-- Password Input -->
+                <label for="loginPassword">Password<span style="color: red;">*</span></label><br>
+                <div class="password-container" style="position: relative;">
+                    <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Password" required>
+                    <i class="fa-regular fa-eye" id="eyeIcon" onclick="togglePassword('loginPassword', 'eyeIcon')" 
+                    style="cursor: pointer; position: absolute; right: 10px; top: 43%; transform: translateY(-50%);"></i>
+                </div>
+
+
+                <!-- Login Button -->
+                <div id="login-button">
+                    <button type="submit">Login</button>
+                </div>
+
+                <!-- Signup with Google -->
+                <div id="sign-with-google">
+                    <img src="images/G-logo.jpeg" alt="google logo">
+                    <a href="#">Sign up with Google</a>
+                </div>
+
+                <!-- Redirect to Signup -->
+                <p id="signup">Don’t have an account? <a href="index.html">Sign up?</a></p>
+            </form>
         </div>
-      </div>
     </section>
-    <!-- </div> -->
     <script src="quize.js"></script>
-  </body>
+</body>
 </html>
